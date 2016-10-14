@@ -7,8 +7,6 @@ import Post from '../components/Post'
 class PostContainer extends React.Component {
   componentDidMount() {
     const { postId, dispatch } = this.props
-
-    dispatch(fetchPostIfNeeded(postId))
   }
 
   renderSpinning() {
@@ -18,10 +16,10 @@ class PostContainer extends React.Component {
   }
 
   render() {
-    const { post, fetching } = this.props
+    const { post, ready } = this.props
 
     return (
-      fetching ? this.renderSpinning() : <Post key="{postId}" {...post} />
+      (!post || post.loading) ? this.renderSpinning() : <Post key="{postId}" {...post} />
     )
   }
 }
@@ -31,11 +29,10 @@ PostContainer.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entities } = state.posts
+  const { ids } = state.items
 
   return {
-    fetching : (typeof entities[ownProps.postId] === 'undefined'),
-    post : entities[ownProps.postId]
+    post : ids.get(ownProps.postId)
   }
 }
 
