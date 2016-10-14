@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import React from 'react'
 import { fetchStories } from '../../../modules/items'
 
-import PostContainer from './PostContainer'
+import ItemContainer from '../../../containers/ItemContainer'
 
 class PostListContainer extends React.Component {
   componentDidMount() {
@@ -21,17 +21,24 @@ class PostListContainer extends React.Component {
 
   getSpinning() {
     return (<div>
-        Loading ...
+        Loading articles...
     </div>)
   }
 
   render() {
-    const { loadingList, postIds } = this.props
+    const { dispatch, loadingList, postIds } = this.props
+
+    let posts = []
+    let rank  = 0
+
+    postIds.map((postId) => {
+      posts = [...posts, <ItemContainer dispatch={dispatch} key={postId} postId={postId} rank={++rank} />]
+    })
 
     return (
         <div style={{ margin: '0 auto' }} >
           { loadingList && this.getSpinning() }
-          {postIds.map((postId) => (<PostContainer key={postId} postId={postId} />))}
+          {posts}
         </div>
     )
   }
