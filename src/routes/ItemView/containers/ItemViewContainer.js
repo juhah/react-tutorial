@@ -11,7 +11,7 @@ class ItemViewContainer extends React.Component {
   render() {
     const { dispatch, itemId } = this.props
 
-    return <ItemContainer dispatch={dispatch} postId={itemId} />
+    return <ItemContainer dispatch={dispatch} showComments={true} postId={itemId} />
   }
 }
 

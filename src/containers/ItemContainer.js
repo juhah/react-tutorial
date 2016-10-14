@@ -20,10 +20,22 @@ class ItemContainer extends React.Component {
   }
 
   renderItem() {
-    const { rank, onClick, post } = this.props
+    const { dispatch, showComments, rank, onClick, post } = this.props
+
+    let kids = []
+
+    if(showComments && post.kids && post.kids.length > 0) {
+      kids = post.kids.map((id) => {
+        return <ItemContainerWrapper dispatch={dispatch} key={id} postId={id} />
+      })
+    }
 
     return (
-      <Item showInfo={true} rank={rank} onClick={onClick} {...post} />
+      <div>
+        <Item showInfo={true} rank={rank} onClick={onClick} {...post} />
+        {kids.length > 0 ? <hr /> : ''} 
+        {kids}
+      </div>
       )
   }
 
@@ -57,4 +69,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ItemContainer)
+const ItemContainerWrapper = connect(mapStateToProps, mapDispatchToProps)(ItemContainer)
+export default ItemContainerWrapper
