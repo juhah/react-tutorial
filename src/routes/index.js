@@ -8,12 +8,11 @@ import PostsRoute from './Posts'
     PlainRoute objects to build route definitions.   */
 
 export const createRoutes = (store) => ({
-  path        : '/',
+  path        : '/(:type)',
   component   : CoreLayout,
-  indexRoute  : Home,
+  indexRoute  : PostsRoute(store),
   childRoutes : [
-    CounterRoute(store),
-    PostsRoute(store)
+    CounterRoute(store)
   ]
 })
 

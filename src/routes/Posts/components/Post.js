@@ -1,5 +1,6 @@
 import React from 'react'
 import { Media } from 'react-bootstrap'
+import { Link } from 'react-router'
 
 const Post = (props) => (
   <Media>
@@ -8,7 +9,9 @@ const Post = (props) => (
       <p>
         by <strong>{ props.by }</strong>
         {" | "}
-        comments: {props.descendants}
+        <Link to={`/posts/${props.id}`} activeClassName='route--active'>
+          comments: {props.descendants}
+        </Link>
       </p>
     </Media.Body>
   </Media>
