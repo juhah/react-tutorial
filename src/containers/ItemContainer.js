@@ -11,7 +11,7 @@ class ItemContainer extends React.Component {
     constructor(props) {
         super(props)
 
-        //this.onClick = this.onClick.bind(this)
+        this.onClick = this.onClick.bind(this)
     }
 
     componentDidMount() {
@@ -44,23 +44,23 @@ class ItemContainer extends React.Component {
       return parts.join(" ")
     }
 
-    /*onClick(e) {
+    onClick(e) {
       e.preventDefault()
 
-      browserHistory.push('/item/' + this.props.itemId)
-    }*/
+      browserHistory.push(e.target.getAttribute('href'))
+    }
 
     renderItem() {
-      const { rank, post : { id, type, title, url } } = this.props
+      const { rank, post } = this.props
 
       const comments = post.descendants || 0
 
       return (
           <Item
-            id={id}
-            title={title}
-            icon={type}
-            url={url}
+            id={post.id}
+            title={post.title}
+            icon={post.type}
+            url={post.url}
             rank={rank}
             byLine={this.getByLine(post)}
             link={{
