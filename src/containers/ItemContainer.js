@@ -1,12 +1,18 @@
 import { connect } from 'react-redux'
 import React from 'react'
 import FontAwesome from 'react-fontawesome';
-import { browserHistory } from 'react-router'
 
 import { fetchItemIfNeeded } from '../modules/items'
 import Item from '../components/Item/Item'
 
 class ItemContainer extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showComments : false
+    }
+  }
+
   componentDidMount() {
     const { postId, dispatch } = this.props
 
@@ -15,9 +21,15 @@ class ItemContainer extends React.Component {
 
   renderSpinning() {
     return (
-      <Item title="..." showInfo={false} />
+      <Item title="..." loading={true} showInfo={false} />
     )
   }
+
+onClick() {
+  this.setState({
+    showComments : !this.state.showComments
+  })
+}
 
   renderItem() {
     const { dispatch, showComments, rank, onClick, post } = this.props
@@ -26,16 +38,14 @@ class ItemContainer extends React.Component {
 
     if(showComments && post.kids && post.kids.length > 0) {
       kids = post.kids.map((id) => {
-        return <ItemContainerWrapper dispatch={dispatch} key={id} postId={id} />
+        return <ItemContainerWrapper dispatch={dispatch} showComments={this.state.showComments} onClick={this.onClick.bind(this)} key={id} postId={id} />
       })
     }
 
     return (
-      <div>
-        <Item showInfo={true} rank={rank} onClick={onClick} {...post} />
-        {kids.length > 0 ? <hr /> : ''} 
-        {kids}
-      </div>
+        <Item showInfo={true} rank={rank} onClick={onClick} {...post}>
+          {kids}
+        </Item>
       )
   }
 
@@ -60,14 +70,5 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onClick : (props, e) => {
-      e.preventDefault()
-      browserHistory.push('/item/' + props.id)
-    }
-  }
-}
-
-const ItemContainerWrapper = connect(mapStateToProps, mapDispatchToProps)(ItemContainer)
+const ItemContainerWrapper = connect(mapStateToProps)(ItemContainer)
 export default ItemContainerWrapper

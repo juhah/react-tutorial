@@ -1,6 +1,6 @@
 import React from 'react'
 import { Media, SpinnerIcon } from 'react-bootstrap'
-import moment from 'moment'
+import FontAwesome from 'react-fontawesome'
 
 function getTitle(props) {
   if(props.title) {
@@ -16,56 +16,35 @@ function getTitle(props) {
   }
 }
 
-function getStoryInfo(props) {
-  let parts = [];
+function getInnerHTML(props) {
+  if(props.innerHTML) {
+    let doc = new DOMParser().parseFromString(props.innerHTML, "text/html");
+    let text = doc.body.innerHTML;
 
-  if(props.score) {
-    parts.push(`${props.score} points`)
+    return (
+      <p dangerouslySetInnerHTML={{__html : text}}></p>
+    )
   }
-
-  if(props.by) {
-    parts.push(`by ${props.by}`)
-  }
-
-  if(props.time) {
-    parts.push(moment.unix(props.time).fromNow() + ' ago')
-  }
-
-  return (
-    <p>
-    {parts.join(' ')}
-    {" | "}
-      <a href='#' onClick={(e) => (props.onClick(props, e))}>
-        {props.descendants} comments
-      </a>
-    </p>
-  )
 }
 
-function getText(props) {
-  let doc = new DOMParser().parseFromString(props.text, "text/html");
-  let text = doc.body.innerHTML;
-
-  return (
-    <div>
-      <p dangerouslySetInnerHTML={{__html : text}}>
+function getByLineAndLink(props) {
+  if(props.byLine || props.linkText) {
+    return (
+      <p>
+        {props.byLine}
+        {props.byLine && props.linkText ? ' | ' : ''}
+        {getLink(props)}
       </p>
-      {getStoryInfo(props)}
-    </div>
-  )
+    )
+  }
 }
 
-function getInfo(props) {
-  if(props.showInfo) {
-    switch(props.type) {
-      case 'story':
-        return getStoryInfo(props)
-      case 'comment':
-        return getText(props)
-    }
+function getLink(props) {
+  if(props.linkText) {
+    return (
+      <a href='#' onClick={props.onClick}>{props.linkText}</a>
+    )
   }
-
-  return (<p></p>)
 }
 
 function getRank(props) {
@@ -78,17 +57,55 @@ function getRank(props) {
   }
 }
 
+function getIconForType(type) {
+  switch (type) {
+    case 'story':
+      return 'newspaper-o'
+
+    case 'comment':
+      return 'comment-o'
+
+    case 'loading':
+      return 'spinner'
+
+    default:
+      return 'circle-o'
+  }
+}
+
+function getIcon(props) {
+  if(props.icon) {
+    return (
+      <Media.Left>
+        <FontAwesome name={getIconForType(props.icon)} spin={props.spinIcon} style={{'fontSize' : '36px', 'color' : '#ddd'}} />
+      </Media.Left>
+    )
+  }
+}
+
 const Item = (props) => (
   <Media>
+    {getIcon(props)}
     {getRank(props)}
     <Media.Body>
       {getTitle(props)}
-      {getInfo(props)}
+      {getInnerHTML(props)}
+      {getByLineAndLink(props)}
+      {props.children}
     </Media.Body>
   </Media>
 )
 
 Item.propTypes = {
+  icon      : React.PropTypes.string,
+  spinIcon  : React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.node]),
+  rank      : React.PropTypes.number,
+  title     : React.PropTypes.string.isRequired,
+  url       : React.PropTypes.string,
+  byLine    : React.PropTypes.string,
+  innerHTML : React.PropTypes.string,
+  linkText  : React.PropTypes.string,
+  onClick   : React.PropTypes.func
 }
 
 export default Item

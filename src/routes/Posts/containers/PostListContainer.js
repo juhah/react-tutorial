@@ -1,21 +1,29 @@
 import { connect } from 'react-redux'
 import React from 'react'
-import { fetchStories } from '../../../modules/items'
+import { fetchStoriesIfNeeded, changePage } from '../../../modules/items'
+import { Pagination } from 'react-bootstrap'
+import ListItemContainer from './ListItemContainer'
 
-import ItemContainer from '../../../containers/ItemContainer'
+const MAX_THREAD_NUMBER = 30
 
 class PostListContainer extends React.Component {
+  constructor(props) {
+      super(props)
+
+      this.handleSelect = this.handleSelect.bind(this)
+  }
+
   componentDidMount() {
     const { dispatch, path } = this.props
 
-    dispatch(fetchStories(path.slice(1)))
+    dispatch(fetchStoriesIfNeeded(path.slice(1)))
   }
 
   componentWillReceiveProps(nextProps) {
     const { dispatch, path } = nextProps
 
     if(this.props.path != path) {
-      dispatch(fetchStories(path.slice(1)))
+      dispatch(fetchStoriesIfNeeded(path))
     }
   }
 
@@ -25,33 +33,63 @@ class PostListContainer extends React.Component {
     </div>)
   }
 
+  onClick(props, e) {
+    e.preventDefault()
+    browserHistory.push('/item/' + props.id)
+  }
+
+  handleSelect(eventKey) {
+      const { path, dispatch } = this.props
+
+      dispatch(changePage(path, eventKey))
+  }
+
   render() {
-    const { dispatch, loadingList, postIds } = this.props
+    const { dispatch, loadingList, itemIds, page, numPages } = this.props
 
     let posts = []
-    let rank  = 0
+    let rank  = (page - 1) * MAX_THREAD_NUMBER
 
-    postIds.map((postId) => {
-      posts = [...posts, <ItemContainer dispatch={dispatch} key={postId} postId={postId} rank={++rank} />]
+    itemIds.map((itemId) => {
+      posts = [...posts, <ListItemContainer dispatch={dispatch} onClick={this.onClick} key={itemId} itemId={itemId} rank={++rank} />]
     })
 
     return (
         <div style={{ margin: '0 auto' }} >
           { loadingList && this.getSpinning() }
           {posts}
+          <Pagination
+            items={numPages}
+            prev
+            next
+            first
+            last
+            ellipsis
+            maxButtons={10}
+            boundaryLinks
+            activePage={this.props.page}
+            onSelect={this.handleSelect} />
         </div>
     )
   }
 }
 
 PostListContainer.propTypes = {
-  postIds : React.PropTypes.array.isRequired,
+  itemIds : React.PropTypes.array.isRequired,
 }
 
-const mapStateToProps = (state) => ({
-  path : state.location.pathname,
-  loadingList : state.items.loadingList,
-  postIds : state.items.list
-})
+const mapStateToProps = (state) => {
+  let path = state.location.pathname.slice(1)
+  let page = state.items.pages[path] || 1;
+  let list = state.items.list.get(path)
+
+  return {
+    path,
+    page,
+    numPages : list && list.data ? Math.ceil(list.data.length / MAX_THREAD_NUMBER) : 1,
+    loadingList : list && list.loading || false,
+    itemIds : list && list.data && list.data.slice((page - 1) * MAX_THREAD_NUMBER, page * MAX_THREAD_NUMBER) || []
+  }
+}
 
 export default connect(mapStateToProps)(PostListContainer)
