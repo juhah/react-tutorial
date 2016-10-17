@@ -22,7 +22,7 @@ class ListItemContainer extends React.Component {
 
     renderSpinning() {
       return (
-        <Item title="..." icon='loading' spinIcon />
+        <Item title="..." rank={this.props.rank} icon='loading' spinIcon />
       )
     }
 

@@ -16,7 +16,7 @@ class PostListContainer extends React.Component {
   componentDidMount() {
     const { dispatch, path } = this.props
 
-    dispatch(fetchStoriesIfNeeded(path.slice(1)))
+    dispatch(fetchStoriesIfNeeded(path))
   }
 
   componentWillReceiveProps(nextProps) {
