@@ -28,11 +28,11 @@ function getInnerHTML(props) {
 }
 
 function getByLineAndLink(props) {
-  if(props.byLine || props.linkText) {
+  if(props.byLine || props.link) {
     return (
       <p>
         {props.byLine}
-        {props.byLine && props.linkText ? ' | ' : ''}
+        {props.byLine && props.link ? ' | ' : ''}
         {getLink(props)}
       </p>
     )
@@ -40,9 +40,9 @@ function getByLineAndLink(props) {
 }
 
 function getLink(props) {
-  if(props.linkText) {
+  if(props.link) {
     return (
-      <a href='#' onClick={props.onClick}>{props.linkText}</a>
+      <a href={props.link.href(props)} onClick={props.onClick}>{props.link.text}</a>
     )
   }
 }
@@ -61,6 +61,9 @@ function getIconForType(type) {
   switch (type) {
     case 'story':
       return 'newspaper-o'
+
+    case 'job':
+      return 'dollar'
 
     case 'comment':
       return 'comment-o'
@@ -104,7 +107,10 @@ Item.propTypes = {
   url       : React.PropTypes.string,
   byLine    : React.PropTypes.string,
   innerHTML : React.PropTypes.string,
-  linkText  : React.PropTypes.string,
+  link      : React.PropTypes.shape({
+    href : React.PropTypes.func.isRequired,
+    text : React.PropTypes.string
+  }),
   onClick   : React.PropTypes.func
 }
 
