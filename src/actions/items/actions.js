@@ -1,0 +1,7 @@
+export const REQUEST_ITEM_IDS = 'REQUEST_ITEM_IDS'
+export const RECEIVE_ITEM_IDS = 'RECEIVE_ITEM_IDS'
+export const REQUEST_ITEM     = 'REQUEST_ITEM'
+export const RECEIVE_ITEM     = 'RECEIVE_ITEM'
+export const CHANGE_PAGE      = 'CHANGE_PAGE'
+export const COLLAPSE_ALL     = 'COLLAPSE_ALL'
+export const TOGGLE_COMMENT   = 'TOGGLE_COMMENT'

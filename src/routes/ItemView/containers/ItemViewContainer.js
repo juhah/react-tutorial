@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { fetchItemIfNeeded, toggleComment } from '../../../modules/items'
+import { fetchItemIfNeeded, toggleComment } from '../../../actions/items/actionCreators'
 
 import ItemContainer from '../../../containers/ItemContainer'
 import ItemListContainer from '../../../containers/ItemListContainer'

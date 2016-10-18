@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import React from 'react'
-import { fetchStoriesIfNeeded, changePage } from '../../../modules/items'
 import { Pagination } from 'react-bootstrap'
+
+import { fetchStoriesIfNeeded, changePage } from '../../../actions/items/actionCreators'
 import ItemContainer from '../../../containers/ItemContainer'
 import ItemListContainer from '../../../containers/ItemListContainer'
-
-const MAX_THREAD_NUMBER = 30
+import { MAX_THREAD_NUMBER } from '../../../constants/constants'
 
 class PostListContainer extends React.Component {
   constructor(props) {
@@ -33,11 +33,6 @@ class PostListContainer extends React.Component {
         Loading articles...
     </div>)
   }
-
-  /*onClick(props, e) {
-    e.preventDefault()
-    browserHistory.push('/item/' + props.id)
-  }*/
 
   handleSelect(eventKey) {
       const { path, dispatch } = this.props

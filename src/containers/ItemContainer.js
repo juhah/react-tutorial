@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import { browserHistory } from 'react-router'
 
-import { fetchItemIfNeeded } from '../modules/items'
+import { fetchItemIfNeeded } from '../actions/items/actionCreators'
 
 import Item from '../components/Item/Item'
 import ItemListContainer from './ItemListContainer'
@@ -104,7 +104,13 @@ class ItemContainer extends React.Component {
     renderChildren() {
       const { post, onClick, showChildren } = this.props
 
-      return <ItemListContainer itemIds={post.kids} showText={true} showRank={false} onClick={onClick} showChildren={showChildren} />
+      return <ItemListContainer
+        itemIds={post.kids}
+        showText={true}
+        showRank={false}
+        onClick={onClick}
+        showChildren={showChildren}
+        />
     }
 
     render() {
@@ -117,7 +123,7 @@ class ItemContainer extends React.Component {
 }
 
 ItemContainer.propTypes = {
-  itemId : React.PropTypes.number.isRequired,
+  itemId       : React.PropTypes.number.isRequired,
   showText     : React.PropTypes.bool,
   showRank     : React.PropTypes.bool,
   showChildren : React.PropTypes.bool
