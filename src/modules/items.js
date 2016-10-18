@@ -5,6 +5,8 @@ export const RECEIVE_ITEM_IDS = 'RECEIVE_ITEM_IDS'
 export const REQUEST_ITEM = 'REQUEST_ITEM'
 export const RECEIVE_ITEM = 'RECEIVE_ITEM'
 export const CHANGE_PAGE = 'CHANGE_PAGE'
+export const COLLAPSE_ALL = 'COLLAPSE_ALL'
+export const TOGGLE_COMMENT = 'TOGGLE_COMMENT'
 
 const API_URL = 'https://hacker-news.firebaseio.com/v0/'
 const MAX_THREAD_NUMBER = 30
@@ -123,6 +125,19 @@ export function changePage(section, page) {
   }
 }
 
+export function toggleComment(itemId) {
+  return {
+    type : TOGGLE_COMMENT,
+    itemId
+  }
+}
+
+export function collapseAll() {
+  return {
+    type : COLLAPSE_ALL
+  }
+}
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
@@ -183,6 +198,29 @@ const ACTION_HANDLERS = {
       ...state,
       pages
     }
+  },
+
+  [TOGGLE_COMMENT]: (state, action) => {
+    let { comments } = state
+
+    if(comments.has(action.itemId)) {
+      comments.set(action.itemId, !comments.get(action.itemId))
+    }
+    else {
+      comments.set(action.itemId, true)
+    }
+
+    return {
+      ...state,
+      comments
+    }
+  },
+
+  [COLLAPSE_ALL]: (state, action) => {
+    return {
+      ...state,
+      comments : new Map()
+    }
   }
 }
 
@@ -193,7 +231,8 @@ const initialState = {
     isLoading : false,
     ids : new Map(),
     list : new Map(),
-    pages : []
+    pages : [],
+    comments : new Map()
 }
 
 export default function itemsReducer (state = initialState, action) {

@@ -64,7 +64,14 @@ class ItemContainer extends React.Component {
     onClick(e) {
       e.preventDefault()
 
-      browserHistory.push(e.target.getAttribute('href'))
+      const { onClick } = this.props
+
+      if(onClick) {
+        onClick(this.props, e)
+      }
+      else {
+        browserHistory.push(e.target.getAttribute('href'))
+      }
     }
 
     renderItem() {
@@ -95,9 +102,9 @@ class ItemContainer extends React.Component {
     }
 
     renderChildren() {
-      const { post } = this.props
+      const { post, onClick, showChildren } = this.props
 
-      return <ItemListContainer itemIds={post.kids} showText={true} showRank={false} showChildren={true} />
+      return <ItemListContainer itemIds={post.kids} showText={true} showRank={false} onClick={onClick} showChildren={showChildren} />
     }
 
     render() {
@@ -117,10 +124,11 @@ ItemContainer.propTypes = {
 }
 
 const mapDispatchToProps = (state, ownProps) => {
-  const { ids } = state.items
+  const { ids, comments } = state.items
 
   return {
-    post : ids.get(ownProps.itemId)
+    post : ids.get(ownProps.itemId),
+    showChildren : ownProps.showChildren && comments.has(ownProps.itemId) && comments.get(ownProps.itemId) || false
   }
 }
 
