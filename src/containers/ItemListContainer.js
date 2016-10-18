@@ -5,7 +5,7 @@ import ItemContainer from './ItemContainer'
 
 class ItemListContainer extends React.Component {
   render() {
-    const { dispatch, itemIds, startRank, showText } = this.props
+    const { dispatch, itemIds, startRank, showText, showRank, showChildren } = this.props
 
     let posts = []
     let rank  = startRank || 0
@@ -17,6 +17,8 @@ class ItemListContainer extends React.Component {
         itemId={itemId}
         rank={++rank}
         showText={showText}
+        showRank={showRank}
+        showChildren={showChildren}
         />
       ]
     })
@@ -30,9 +32,11 @@ class ItemListContainer extends React.Component {
 }
 
 ItemListContainer.propTypes = {
-  itemIds   : React.PropTypes.array.isRequired,
-  startRank : React.PropTypes.number,
-  showText  : React.PropTypes.bool,
+  itemIds      : React.PropTypes.array.isRequired,
+  startRank    : React.PropTypes.number,
+  showText     : React.PropTypes.bool,
+  showRank     : React.PropTypes.bool,
+  showChildren : React.PropTypes.bool
 }
 
 export default connect()(ItemListContainer)

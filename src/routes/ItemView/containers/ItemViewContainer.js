@@ -21,7 +21,7 @@ class ItemViewContainer extends React.Component {
       <div>
         <ItemContainer dispatch={dispatch} itemId={itemId} showText={true} />
         <hr />
-        <ItemListContainer itemIds={itemIds} showText={true} />
+        <ItemListContainer itemIds={itemIds} showChildren={true} showText={true} showRank={false} />
       </div>
     )
   }

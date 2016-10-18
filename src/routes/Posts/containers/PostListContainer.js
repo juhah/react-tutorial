@@ -66,7 +66,7 @@ class PostListContainer extends React.Component {
     return (
         <div style={{ margin: '0 auto' }} >
           { loadingList && this.getSpinning() }
-          <ItemListContainer itemIds={itemIds} showText={false} startRank={(page - 1) * MAX_THREAD_NUMBER}/>
+          <ItemListContainer itemIds={itemIds} showText={false} showRank={true} showChildren={false} startRank={(page - 1) * MAX_THREAD_NUMBER}/>
           {pagination}
         </div>
     )

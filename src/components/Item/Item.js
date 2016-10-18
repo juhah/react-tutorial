@@ -68,6 +68,9 @@ function getIconForType(type) {
     case 'comment':
       return 'comment-o'
 
+      case 'comments':
+        return 'comments-o'
+
     case 'loading':
       return 'spinner'
 

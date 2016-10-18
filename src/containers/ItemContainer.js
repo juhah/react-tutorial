@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router'
 import { fetchItemIfNeeded } from '../modules/items'
 
 import Item from '../components/Item/Item'
+import ItemListContainer from './ItemListContainer'
 
 class ItemContainer extends React.Component {
     constructor(props) {
@@ -52,6 +53,14 @@ class ItemContainer extends React.Component {
       return post.kids && post.kids.length || 0
     }
 
+    getIconType(post) {
+      if(post.type == 'comment') {
+        return post.kids && post.kids.length > 0 ? 'comments' : 'comment'
+      }
+
+      return post.type
+    }
+
     onClick(e) {
       e.preventDefault()
 
@@ -59,18 +68,18 @@ class ItemContainer extends React.Component {
     }
 
     renderItem() {
-      const { rank, post, showText } = this.props
+      const { rank, post, showText, showRank, showChildren } = this.props
 
       const comments = this.getCommentCount(post)
 
       let itemProperties = {
         id     : post.id,
         title  : post.title,
-        icon   : post.type,
+        icon   : this.getIconType(post),
         url    : post.url,
-        rank   : rank,
+        rank   : showRank ? rank : null,
         byLine : this.getByLine(post),
-        innerHTML : showText && post.text,
+        innerHTML : showText ? post.text : null,
         link   : {
           'href' : (props) => (`/item/${props.id}`),
           'text' : `${comments} comments`
@@ -79,8 +88,16 @@ class ItemContainer extends React.Component {
       }
 
       return (
-          <Item {...itemProperties} />
+          <Item {...itemProperties}>
+            {showChildren && comments > 0 && this.renderChildren()}
+          </Item>
         )
+    }
+
+    renderChildren() {
+      const { post } = this.props
+
+      return <ItemListContainer itemIds={post.kids} showText={true} showRank={false} showChildren={true} />
     }
 
     render() {
@@ -93,7 +110,10 @@ class ItemContainer extends React.Component {
 }
 
 ItemContainer.propTypes = {
-  itemId : React.PropTypes.number.isRequired
+  itemId : React.PropTypes.number.isRequired,
+  showText     : React.PropTypes.bool,
+  showRank     : React.PropTypes.bool,
+  showChildren : React.PropTypes.bool
 }
 
 const mapDispatchToProps = (state, ownProps) => {
