@@ -3,6 +3,7 @@ import React from 'react'
 import { fetchStoriesIfNeeded, changePage } from '../../../modules/items'
 import { Pagination } from 'react-bootstrap'
 import ItemContainer from '../../../containers/ItemContainer'
+import ItemListContainer from '../../../containers/ItemListContainer'
 
 const MAX_THREAD_NUMBER = 30
 
@@ -47,15 +48,8 @@ class PostListContainer extends React.Component {
   render() {
     const { dispatch, loadingList, itemIds, page, numPages } = this.props
 
-    let posts = []
-    let rank  = (page - 1) * MAX_THREAD_NUMBER
-
-    itemIds.map((itemId) => {
-      posts = [...posts, <ItemContainer dispatch={dispatch} key={itemId} itemId={itemId} rank={++rank} />]
-    })
-
     let pagination
-    if(posts.length > 0 && numPages > 1) {
+    if(itemIds.length > 0 && numPages > 1) {
         pagination = <Pagination
           items={numPages}
           prev
@@ -72,7 +66,7 @@ class PostListContainer extends React.Component {
     return (
         <div style={{ margin: '0 auto' }} >
           { loadingList && this.getSpinning() }
-          {posts}
+          <ItemListContainer itemIds={itemIds} showText={false} startRank={(page - 1) * MAX_THREAD_NUMBER}/>
           {pagination}
         </div>
     )

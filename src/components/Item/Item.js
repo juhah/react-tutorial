@@ -79,8 +79,8 @@ function getIconForType(type) {
 function getIcon(props) {
   if(props.icon) {
     return (
-      <Media.Left>
-        <FontAwesome name={getIconForType(props.icon)} spin={props.spinIcon} style={{'fontSize' : '36px', 'color' : '#ddd'}} />
+      <Media.Left style={{'textAlign' : 'center'}}>
+        <FontAwesome name={getIconForType(props.icon)} spin={props.spinIcon} style={{'fontSize' : '36px', 'color' : '#ddd', 'width' : '45px'}} />
       </Media.Left>
     )
   }
@@ -103,7 +103,7 @@ Item.propTypes = {
   icon      : React.PropTypes.string,
   spinIcon  : React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.node]),
   rank      : React.PropTypes.number,
-  title     : React.PropTypes.string.isRequired,
+  title     : React.PropTypes.string,
   url       : React.PropTypes.string,
   byLine    : React.PropTypes.string,
   innerHTML : React.PropTypes.string,

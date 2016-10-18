@@ -44,6 +44,14 @@ class ItemContainer extends React.Component {
       return parts.join(" ")
     }
 
+    getCommentCount(post) {
+      if(post.type === 'story') {
+        return post.descendants || 0
+      }
+
+      return post.kids && post.kids.length || 0
+    }
+
     onClick(e) {
       e.preventDefault()
 
@@ -51,24 +59,27 @@ class ItemContainer extends React.Component {
     }
 
     renderItem() {
-      const { rank, post } = this.props
+      const { rank, post, showText } = this.props
 
-      const comments = post.descendants || 0
+      const comments = this.getCommentCount(post)
+
+      let itemProperties = {
+        id     : post.id,
+        title  : post.title,
+        icon   : post.type,
+        url    : post.url,
+        rank   : rank,
+        byLine : this.getByLine(post),
+        innerHTML : showText && post.text,
+        link   : {
+          'href' : (props) => (`/item/${props.id}`),
+          'text' : `${comments} comments`
+        },
+        onClick : this.onClick
+      }
 
       return (
-          <Item
-            id={post.id}
-            title={post.title}
-            icon={post.type}
-            url={post.url}
-            rank={rank}
-            byLine={this.getByLine(post)}
-            link={{
-              'href' : (props) => (`/item/${props.id}`),
-              'text' : `${comments} comments`}
-            }
-            onClick={this.onClick}
-          />
+          <Item {...itemProperties} />
         )
     }
 
